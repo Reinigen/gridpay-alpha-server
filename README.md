@@ -143,6 +143,9 @@ This is the backend to handle the functions for the GridPay Utility Billings App
 
 - `GET /api/meters`: Get all meters.
 - `POST /api/meters`: Add a new meter.
+
+### Meter Reading Management
+
 - `GET /api/meters/readings`: Get all meter readings.
 - `POST /api/meters/readings`: Record a meter reading.
 
