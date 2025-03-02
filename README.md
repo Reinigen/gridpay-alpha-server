@@ -121,34 +121,9 @@ This is the backend to handle the functions for the GridPay Utility Billings App
 
 ### Prerequisites
 
-- **Node.js** (version >= 14.x)
-- **PostGreSQL** Database
-
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/utility-management-system.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd utility-management-system
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Configure the database connection in `config/db.js`.
-
 ### Running the Application
-
-1. Start the server:
-   ```bash
-   npm start
-   ```
-2. Access the API at `http://localhost:3000`.
-
----
 
 ## API Endpoints
 
