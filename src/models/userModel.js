@@ -8,19 +8,62 @@ export const getUserByIdService = async (id) => {
   const result = await pool.query("SELECT * FROM users where id = $1", [id]);
   return result.rows[0];
 };
-export const createUserService = async (name, email) => {
+export const createUserService = async (
+  customer_id,
+  firstName,
+  lastName,
+  email,
+  password,
+  isAdmin,
+  mobileNo,
+  company_id
+) => {
   const result = await pool.query(
-    "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
-    [name, email]
+    "INSERT INTO users (customer_id, firstName, lastName, email, password, isAdmin, mobileNo, company_id) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
+    [
+      customer_id,
+      firstName,
+      lastName,
+      email,
+      password,
+      isAdmin,
+      mobileNo,
+      company_id,
+    ]
   );
   return result.rows[0];
 };
-export const updateUserService = async (id, name, email) => {
+
+export const updateUserDataService = async (
+  id,
+  customer_id,
+  firstName,
+  lastName,
+  email,
+  password,
+  isAdmin,
+  mobileNo,
+  company_id
+) => {
   const result = await pool.query(
-    "UPDATE users SET name=$1, email=$2 WHERE id=$3 RETURNING *",
-    [name, email, id]
+    "UPDATE users SET customer_id=$1, firstName=$2, lastName=$3, email=$4, password=$5, isAdmin=$6, mobileNo=$7, company_id=$8 WHERE id=$9 RETURNING *",
+    [
+      customer_id,
+      firstName,
+      lastName,
+      email,
+      password,
+      isAdmin,
+      mobileNo,
+      company_id,
+      id,
+      customer_id,
+    ]
   );
-  return result;
+  if (result.rowCount === 0) {
+    throw new Error("User not found");
+  }
+  return result.rows[0];
 };
 export const deleteUserService = async (id) => {
   const result = await pool.query("DELETE FROM users WHERE id=$1 RETURNING *", [

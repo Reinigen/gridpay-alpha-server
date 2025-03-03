@@ -1,4 +1,8 @@
-CREATE TYPE payment_type AS ENUM (
+import pool from "../config/db.js";
+
+const createPaymentTable = async () => {
+  const queryText = `
+  CREATE TYPE payment_type AS ENUM (
     'cash',
     'credit_card',
     'bank_transfer',
@@ -14,3 +18,14 @@ CREATE TABLE IF NOT EXISTS payment (
     total_payment int NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 )
+    `;
+
+  try {
+    pool.query(queryText);
+    console.log("User table created if not exists");
+  } catch (error) {
+    console.log("Error creating users table: ", error);
+  }
+};
+
+export default createPaymentTable;
