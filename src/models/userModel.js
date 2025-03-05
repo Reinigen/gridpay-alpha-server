@@ -34,9 +34,8 @@ export const createUserService = async (
   return result.rows[0];
 };
 
-export const updateUserDataService = async (
+export const updateUserDetailsService = async (
   id,
-  customer_id,
   firstName,
   lastName,
   email,
@@ -47,18 +46,7 @@ export const updateUserDataService = async (
 ) => {
   const result = await pool.query(
     "UPDATE users SET customer_id=$1, firstName=$2, lastName=$3, email=$4, password=$5, isAdmin=$6, mobileNo=$7, company_id=$8 WHERE id=$9 RETURNING *",
-    [
-      customer_id,
-      firstName,
-      lastName,
-      email,
-      password,
-      isAdmin,
-      mobileNo,
-      company_id,
-      id,
-      customer_id,
-    ]
+    [firstName, lastName, email, password, isAdmin, mobileNo, company_id, id]
   );
   if (result.rowCount === 0) {
     throw new Error("User not found");

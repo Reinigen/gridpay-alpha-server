@@ -1,30 +1,30 @@
-import pool from "../config/db.js";
+import { knexInstance } from "../config/db.js";
 
 const createPaymentTable = async () => {
-  const queryText = `
-  CREATE TYPE payment_type AS ENUM (
-    'cash',
-    'credit_card',
-    'bank_transfer',
-    'mobile_payment'
-);
-CREATE TABLE IF NOT EXISTS payment (
-    payment_id SERIAL PRIMARY KEY,
-    customer_id INT FOREIGN KEY REFERENCES customer(customer_id),
-    billing_id INT FOREIGN KEY REFERENCES bill(billing_id),
-    payment_method payment_type NOT NULL,
-    original_receipt VARCHAR,
-    duplicate_receipt VARCHAR,
-    total_payment int NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-)
-    `;
-
   try {
-    pool.query(queryText);
-    console.log("User table created if not exists");
+    await knexInstance.schema.createTableIfNotExists("payment", (table) => {
+      table.increments("payment_id").primary();
+      table
+        .string("customer_id", 255)
+        .references("customer_id")
+        .inTable("customer");
+      table.integer("invoice_id").references("invoice_id").inTable("bill");
+      table
+        .enum("payment_method", [
+          "cash",
+          "credit_card",
+          "bank_transfer",
+          "mobile_payment",
+        ])
+        .notNullable();
+      table.string("original_receipt", 255).nullable();
+      table.string("duplicate_receipt", 255).nullable();
+      table.integer("total_payment").notNullable();
+      table.timestamp("created_at").defaultTo(knexInstance.fn.now());
+    });
+    console.log("Payment table created if not exists");
   } catch (error) {
-    console.log("Error creating users table: ", error);
+    console.log("Error creating payment table: ", error);
   }
 };
 

@@ -1,23 +1,18 @@
-import pool from "../config/db.js";
+import { knexInstance } from "../config/db.js";
 
 const createUserTable = async () => {
-  const queryText = `
-    CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    customer_id VARCHAR(100) UNIQUE NOT NULL,
-    firstName VARCHAR(100) NOT NULL,
-    lastName VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    isAdmin BOOLEAN NOT NULL,
-    mobileNo INT NOT NULL,
-    company_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-)
-    `;
-
   try {
-    pool.query(queryText);
+    await knexInstance.schema.createTableIfNotExists("users", (table) => {
+      table.increments("id").primary();
+      table.string("firstName", 100).notNullable();
+      table.string("lastName", 100).notNullable();
+      table.string("email", 100).unique().notNullable();
+      table.string("password", 100).notNullable();
+      table.boolean("isAdmin").defaultTo(false);
+      table.integer("mobileNo").notNullable();
+      table.integer("company_id");
+      table.timestamp("created_at").defaultTo(knexInstance.fn.now());
+    });
     console.log("User table created if not exists");
   } catch (error) {
     console.log("Error creating users table: ", error);

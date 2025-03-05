@@ -1,21 +1,22 @@
-import pool from "../config/db.js";
-
+import { knexInstance } from "../config/db.js";
 const createBillTable = async () => {
-  const queryText = `
-    CREATE TABLE IF NOT EXISTS bill (
-    billing_id SERIAL PRIMARY KEY,
-    customer_id INT FOREIGN KEY REFERENCES customer(customer_id),
-    meter_reading_id INT FOREIGN KEY REFERENCES meter_reading(meter_reading_id),
-    billing_month date NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-)
-    `;
-
   try {
-    pool.query(queryText);
-    console.log("User table created if not exists");
+    await knexInstance.schema.createTableIfNotExists("bill", (table) => {
+      table.increments("invoice_id").primary();
+      table
+        .string("customer_id", 255)
+        .references("customer_id")
+        .inTable("customer");
+      table
+        .integer("meter_reading_id")
+        .references("meter_reading_id")
+        .inTable("meter_reading");
+      table.date("billing_month").notNullable();
+      table.timestamp("created_at").defaultTo(knexInstance.fn.now());
+    });
+    console.log("Bill table created if not exists");
   } catch (error) {
-    console.log("Error creating users table: ", error);
+    console.error(error);
   }
 };
 

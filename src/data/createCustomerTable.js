@@ -3,20 +3,21 @@ import pool from "../config/db.js";
 const createCustomerTable = async () => {
   const queryText = `
     CREATE TABLE IF NOT EXISTS customer (
-    company_id SERIAL PRIMARY KEY,
-    company_name VARCHAR(100) UNIQUE NOT NULL,
+    customer_id VARCHAR(100) UNIQUE PRIMARY KEY NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
     address VARCHAR(100) NOT NULL,
-    customers_id INT NOT NULL,
-    meter_id INT NOT NULL,
-    billing_id INT,
-    payment_id INT,
+    meter_id INT FOREIGN KEY REFERENCES bill(meter_id),
+    is_billing Boolean DEFAULT FALSE,
+    is_senior Boolean DEFAULT FALSE,
+    invoice_id INT FOREIGN KEY REFERENCES bill(invoice_id),
+    payment_id INT FOREIGN KEY REFERENCES payment(payment_id),
     created_at TIMESTAMP DEFAULT NOW()
 )
     `;
 
   try {
     pool.query(queryText);
-    console.log("User table created if not exists");
+    console.log("Customer table created if not exists");
   } catch (error) {
     console.log("Error creating users table: ", error);
   }

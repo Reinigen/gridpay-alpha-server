@@ -1,5 +1,6 @@
 import pkg from "pg";
 import dotenv from "dotenv";
+import knex from "knex";
 const { Pool } = pkg;
 
 // Env Setup
@@ -19,4 +20,12 @@ pool.on("connect", () => {
   console.log("Connection pool established with Database");
 });
 
-export default pool;
+const knexInstance = knex({
+  client: "pg",
+  connection: pool,
+  pool: {
+    min: 2,
+    max: 10,
+  },
+});
+export default { pool, knexInstance };

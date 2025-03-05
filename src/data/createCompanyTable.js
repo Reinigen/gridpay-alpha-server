@@ -1,24 +1,35 @@
-import pool from "../config/db.js";
-
+import { knexInstance } from "../config/db.js";
 const createCompanyTable = async () => {
-  const queryText = `
-    CREATE TABLE IF NOT EXISTS company (
-    company_id SERIAL PRIMARY KEY,
-    company_name VARCHAR(100) UNIQUE NOT NULL,
-    address VARCHAR(100) NOT NULL,
-    customers_id INT,
-    meter_id INT,
-    billing_id INT,
-    payment_id INT,
-    created_at TIMESTAMP DEFAULT NOW()
-)
-    `;
-
   try {
-    pool.query(queryText);
-    console.log("User table created if not exists");
+    await knexInstance.schema.createTableIfNotExists("company", (table) => {
+      table.increments("company_id").primary();
+      table.string("company_name", 100).unique().notNullable();
+      table.string("address", 100).notNullable();
+      table
+        .integer("customers_id")
+        .references("customer_id")
+        .inTable("customer")
+        .nullable();
+      table
+        .integer("meter_id")
+        .references("meter_id")
+        .inTable("meter")
+        .nullable();
+      table
+        .integer("invoice_id")
+        .references("invoice_id")
+        .inTable("bill")
+        .nullable();
+      table
+        .integer("payment_id")
+        .references("payment_id")
+        .inTable("payment")
+        .nullable();
+      table.timestamp("created_at").defaultTo(knexInstance.fn.now());
+    });
+    console.log("Company table created if not exists");
   } catch (error) {
-    console.log("Error creating users table: ", error);
+    console.log("Error creating company table: ", error);
   }
 };
 

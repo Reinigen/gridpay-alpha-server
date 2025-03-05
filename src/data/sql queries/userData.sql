@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(100) NOT NULL,
     isAdmin BOOLEAN NOT NULL,
     mobileNo INT NOT NULL,
-    company_id INT NOT NULL,
+    company_id INT,
     created_at TIMESTAMP DEFAULT NOW()
 )
