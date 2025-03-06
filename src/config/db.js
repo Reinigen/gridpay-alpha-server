@@ -22,10 +22,11 @@ pool.on("connect", () => {
 
 const knexInstance = knex({
   client: "pg",
-  connection: pool,
+  connection: `postgres://${process.env.DB_USER}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.DBPORT}/${process.env.DATABASE}`,
   pool: {
     min: 2,
     max: 10,
   },
 });
+
 export default { pool, knexInstance };

@@ -4,32 +4,32 @@ class Company {
     const companies = await knexInstance.select("*").from("company");
     return companies;
   };
-  static getCompanyByIdService = async (id) => {
+  static getCompanyByIdService = async (companyId) => {
     const company = await knexInstance
       .select("*")
       .from("company")
-      .where("company_id", id)
+      .where("companyId", companyId)
       .first();
     return company;
   };
   static createCompanyService = async (
-    company_id,
-    company_name,
+    companyId,
+    companyName,
     address,
-    customers_id,
-    meter_id,
-    billing_id,
-    payment_id
+    customerId,
+    meterId,
+    invoiceId,
+    paymentId
   ) => {
     const newCompany = await knexInstance("company")
       .insert({
-        company_id: company_id,
-        company_name: company_name,
+        companyId: companyId,
+        companyName: companyName,
         address: address,
-        customers_id: customers_id,
-        meter_id: meter_id,
-        billing_id: billing_id,
-        payment_id: payment_id,
+        customerId: customerId,
+        meterId: meterId,
+        invoiceId: invoiceId,
+        paymentId: paymentId,
       })
       .returning("*");
     return newCompany[0];

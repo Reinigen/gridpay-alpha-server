@@ -1,10 +1,10 @@
 import { errorHandler } from "../middlewares/errorHandler.js";
 import {
-  createUserService,
-  deleteUserService,
   getAllUsersService,
   getUserByIdService,
-  updateUserService,
+  createUserService,
+  updateUserDetailsService,
+  deleteUserService,
 } from "../models/userModel.js";
 
 // Standardized response function
@@ -55,7 +55,11 @@ export const getUserById = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
   const { name, email } = req.body;
   try {
-    const updatedUser = await updateUserService(req.params.id, name, email);
+    const updatedUser = await updateUserDetailsService(
+      req.params.id,
+      name,
+      email
+    );
     if (!updatedUser) return handleResponse(res, 404, "User not found");
     handleResponse(res, 200, "User updated successfully", updatedUser);
   } catch (err) {

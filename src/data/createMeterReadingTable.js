@@ -1,22 +1,30 @@
-import pool from "../config/db.js";
+import db from "../config/db.js";
+const { knexInstance } = db;
 
 const createMeterReadingTable = async () => {
-  const queryText = `
-    CREATE TABLE IF NOT EXISTS meter_reading (
-    meter_reading_id SERIAL PRIMARY KEY,
-    customer_id INT FOREIGN KEY REFERENCES customer(customer_id),
-    reading_month date NOT NULL,
-    reading int NOT NULL,
-    reading_image VARCHAR(100) NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-)
-    `;
-
   try {
-    pool.query(queryText);
-    console.log("User table created if not exists");
+    knexInstance.schema.hasTable("meterReading").then(function (exists) {
+      if (!exists) {
+        return knexInstance.schema
+          .createTable("meterReading", (table) => {
+            table.increments("meterReadingId").primary();
+            table
+              .integer("customerId")
+              .references("customerId")
+              .inTable("customer");
+            table.date("readingMonth").notNullable();
+            table.integer("reading").notNullable();
+            table.string("readingImage", 100).nullable();
+            table.timestamp("createdAt").defaultTo(knexInstance.fn.now());
+          })
+          .catch((error) => {
+            console.log(`Error creating Meter Reading table: ${error}`);
+          });
+      }
+      console.log("Meter Reading table created if not exists");
+    });
   } catch (error) {
-    console.log("Error creating users table: ", error);
+    console.log("Error creating Meter Reading table: ", error);
   }
 };
 

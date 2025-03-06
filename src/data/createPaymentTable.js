@@ -1,28 +1,37 @@
-import { knexInstance } from "../config/db.js";
+import db from "../config/db.js";
+const { knexInstance } = db;
 
 const createPaymentTable = async () => {
   try {
-    await knexInstance.schema.createTableIfNotExists("payment", (table) => {
-      table.increments("payment_id").primary();
-      table
-        .string("customer_id", 255)
-        .references("customer_id")
-        .inTable("customer");
-      table.integer("invoice_id").references("invoice_id").inTable("bill");
-      table
-        .enum("payment_method", [
-          "cash",
-          "credit_card",
-          "bank_transfer",
-          "mobile_payment",
-        ])
-        .notNullable();
-      table.string("original_receipt", 255).nullable();
-      table.string("duplicate_receipt", 255).nullable();
-      table.integer("total_payment").notNullable();
-      table.timestamp("created_at").defaultTo(knexInstance.fn.now());
+    knexInstance.schema.hasTable("payment").then(function (exists) {
+      if (!exists) {
+        return knexInstance.schema
+          .createTable("payment", (table) => {
+            table.increments("paymentId").primary();
+            table
+              .string("customerId", 255)
+              .references("customerId")
+              .inTable("customer");
+            table.integer("invoiceId").references("invoiceId").inTable("bill");
+            table
+              .enum("paymentMethod", [
+                "cash",
+                "creditCard",
+                "bankTransfer",
+                "mobilePayment",
+              ])
+              .notNullable();
+            table.string("originalReceipt", 255).nullable();
+            table.string("duplicateReceipt", 255).nullable();
+            table.integer("totalPayment").notNullable();
+            table.timestamp("createdAt").defaultTo(knexInstance.fn.now());
+          })
+          .catch((error) => {
+            console.log("Error creating payment table: ", error);
+          });
+      }
+      console.log("Payment table created if not exists");
     });
-    console.log("Payment table created if not exists");
   } catch (error) {
     console.log("Error creating payment table: ", error);
   }

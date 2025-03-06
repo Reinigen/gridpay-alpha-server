@@ -1,25 +1,41 @@
-import pool from "../config/db.js";
+import db from "../config/db.js";
+const { knexInstance } = db;
 
 const createCustomerTable = async () => {
-  const queryText = `
-    CREATE TABLE IF NOT EXISTS customer (
-    customer_id VARCHAR(100) UNIQUE PRIMARY KEY NOT NULL,
-    customer_name VARCHAR(100) NOT NULL,
-    address VARCHAR(100) NOT NULL,
-    meter_id INT FOREIGN KEY REFERENCES bill(meter_id),
-    is_billing Boolean DEFAULT FALSE,
-    is_senior Boolean DEFAULT FALSE,
-    invoice_id INT FOREIGN KEY REFERENCES bill(invoice_id),
-    payment_id INT FOREIGN KEY REFERENCES payment(payment_id),
-    created_at TIMESTAMP DEFAULT NOW()
-)
-    `;
-
   try {
-    pool.query(queryText);
-    console.log("Customer table created if not exists");
+    knexInstance.schema.hasTable("customer").then(function (exists) {
+      if (!exists) {
+        return knexInstance.schema
+          .createTable("customer", (table) => {
+            table.string("customerId", 255).unique().primary();
+            table.string("customerName", 100).unique().notNullable();
+            table.string("address", 100).notNullable();
+            table
+              .integer("meterId")
+              .references("meterId")
+              .inTable("meter")
+              .nullable();
+            table.boolean("isBilling").defaultTo(false);
+            table.boolean("isSenior").defaultTo(false);
+            table
+              .integer("invoiceId")
+              .references("invoiceId")
+              .inTable("bill")
+              .nullable();
+            table
+              .integer("paymentId")
+              .references("paymentId")
+              .inTable("payment")
+              .nullable();
+          })
+          .catch((error) => {
+            console.log(`Error creating Customer table: ${error}`);
+          });
+      }
+      console.log("Customer table created if not exists");
+    });
   } catch (error) {
-    console.log("Error creating users table: ", error);
+    console.log("Error creating customer table: ", error);
   }
 };
 

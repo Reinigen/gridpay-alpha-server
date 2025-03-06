@@ -1,20 +1,29 @@
-import { knexInstance } from "../config/db.js";
+import db from "../config/db.js";
+const { knexInstance } = db;
 const createBillTable = async () => {
   try {
-    await knexInstance.schema.createTableIfNotExists("bill", (table) => {
-      table.increments("invoice_id").primary();
-      table
-        .string("customer_id", 255)
-        .references("customer_id")
-        .inTable("customer");
-      table
-        .integer("meter_reading_id")
-        .references("meter_reading_id")
-        .inTable("meter_reading");
-      table.date("billing_month").notNullable();
-      table.timestamp("created_at").defaultTo(knexInstance.fn.now());
+    knexInstance.schema.hasTable("company").then(function (exists) {
+      if (!exists) {
+        return knexInstance.schema
+          .createTable("bill", (table) => {
+            table.increments("invoiceId").primary();
+            table
+              .string("customerId", 255)
+              .references("customerId")
+              .inTable("customer");
+            table
+              .integer("meterReadingId")
+              .references("meterReadingId")
+              .inTable("meterReading");
+            table.date("billingMonth").notNullable();
+            table.timestamp("createdAt").defaultTo(knexInstance.fn.now());
+          })
+          .catch((error) => {
+            console.log(`Error creating Bill Table  ${error}`);
+          });
+      }
+      console.log("Bill table created if not exists");
     });
-    console.log("Bill table created if not exists");
   } catch (error) {
     console.error(error);
   }

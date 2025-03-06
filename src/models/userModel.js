@@ -1,61 +1,53 @@
-import pool from "../config/db.js";
+import db from "../config/db.js";
+const { knexInstance } = db;
 
 export const getAllUsersService = async () => {
-  const result = await pool.query("SELECT * FROM users");
-  return result.rows;
+  const allUsers = await knexInstance.select("*").from("users");
+  return allUsers;
 };
-export const getUserByIdService = async (id) => {
-  const result = await pool.query("SELECT * FROM users where id = $1", [id]);
-  return result.rows[0];
+export const getUserByIdService = async (userId) => {
+  const user = await knexInstance
+    .select("*")
+    .from("users")
+    .where("userId", userId);
+  return user[0];
 };
 export const createUserService = async (
-  customer_id,
+  userId,
   firstName,
   lastName,
   email,
   password,
   isAdmin,
   mobileNo,
-  company_id
+  companyId
 ) => {
-  const result = await pool.query(
-    "INSERT INTO users (customer_id, firstName, lastName, email, password, isAdmin, mobileNo, company_id) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
-    [
-      customer_id,
-      firstName,
-      lastName,
-      email,
-      password,
-      isAdmin,
-      mobileNo,
-      company_id,
-    ]
-  );
-  return result.rows[0];
+  const newUser = await knexInstance("users")
+    .insert({
+      userId: userId,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      isAdmin: isAdmin,
+      mobileNo: mobileNo,
+      companyId: companyId,
+    })
+    .returning("*");
+  return newUser[0];
 };
 
-export const updateUserDetailsService = async (
-  id,
-  firstName,
-  lastName,
-  email,
-  password,
-  isAdmin,
-  mobileNo,
-  company_id
-) => {
-  const result = await pool.query(
-    "UPDATE users SET customer_id=$1, firstName=$2, lastName=$3, email=$4, password=$5, isAdmin=$6, mobileNo=$7, company_id=$8 WHERE id=$9 RETURNING *",
-    [firstName, lastName, email, password, isAdmin, mobileNo, company_id, id]
-  );
-  if (result.rowCount === 0) {
-    throw new Error("User not found");
-  }
-  return result.rows[0];
+export const updateUserDetailsService = async (userId, userData) => {
+  const updatedUser = await knexInstance("users")
+    .where("userId", userId)
+    .update(userData)
+    .returning("*");
+  return updatedUser[0];
 };
-export const deleteUserService = async (id) => {
-  const result = await pool.query("DELETE FROM users WHERE id=$1 RETURNING *", [
-    id,
-  ]);
-  return result.rows[0];
+export const deleteUserService = async (userId) => {
+  const deletedUser = await knexInstance("users")
+    .where("userId", userId)
+    .del()
+    .returning("*");
+  return deletedUser[0];
 };

@@ -1,18 +1,27 @@
-import { knexInstance } from "../config/db.js";
+import db from "../config/db.js";
+const { knexInstance } = db;
 
 const createMeterTable = async () => {
   try {
-    await knexInstance.schema.createTableIfNotExists("meter", (table) => {
-      table.increments("meter_id").primary();
-      table
-        .integer("meter_reading")
-        .references("meter_reading_id")
-        .inTable("meter_reading");
-      table.integer("address").references("address").inTable("customer");
+    knexInstance.schema.hasTable("meter").then(function (exists) {
+      if (!exists) {
+        return knexInstance.schema
+          .createTable("meter", (table) => {
+            table.increments("meterId").primary();
+            table
+              .integer("meterReading")
+              .references("meterReadingId")
+              .inTable("meterReading");
+            table.integer("address").references("address").inTable("customer");
+          })
+          .catch((error) => {
+            console.log(`Error creating meter table: ${error}`);
+          });
+      }
+      console.log("Meter table created if not exists");
     });
-    console.log("Meter table created if not exists");
   } catch (error) {
-    console.log("Error creating meter table: ", error);
+    console.log(`Error creating meter table: ${error}`);
   }
 };
 
