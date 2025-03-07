@@ -1,10 +1,10 @@
 import { knexInstance } from "../config/db.js";
-class Company {
-  static getAllCompaniesService = async () => {
+class CompanyModel {
+  static getAllCompanies = async () => {
     const companies = await knexInstance.select("*").from("company");
     return companies;
   };
-  static getCompanyByIdService = async (companyId) => {
+  static getCompanyById = async (companyId) => {
     const company = await knexInstance
       .select("*")
       .from("company")
@@ -12,8 +12,7 @@ class Company {
       .first();
     return company;
   };
-  static createCompanyService = async (
-    companyId,
+  static createCompany = async (
     companyName,
     address,
     customerId,
@@ -23,7 +22,6 @@ class Company {
   ) => {
     const newCompany = await knexInstance("company")
       .insert({
-        companyId: companyId,
         companyName: companyName,
         address: address,
         customerId: customerId,
@@ -35,21 +33,21 @@ class Company {
     return newCompany[0];
   };
 
-  static updateCompanyDetailsService = async (company_data, company_id) => {
+  static updateCompany = async (companyId, companyData) => {
     const updatedCompany = await knexInstance("company")
-      .where("company_id", company_id)
-      .update(company_data)
+      .where("companyId", companyId)
+      .update(companyData)
       .returning("*");
     return updatedCompany[0];
   };
 
-  static deleteCompanyService = async (company_id) => {
+  static deleteCompany = async (companyId) => {
     const deletedCompany = await knexInstance("company")
-      .where("company_id", company_id)
+      .where("companyId", companyId)
       .del()
       .returning("*");
     return deletedCompany[0];
   };
 }
 
-export default Company;
+export default CompanyModel;

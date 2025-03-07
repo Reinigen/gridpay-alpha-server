@@ -1,73 +1,71 @@
-import { errorHandler } from "../middlewares/errorHandler.js";
-import {
-  createUserService,
-  deleteUserService,
-  getAllUsersService,
-  getUserByIdService,
-  updateUserService,
-} from "../models/userModel.js";
+import { errorHandler, responseHandler } from "../middlewares/errorHandler.js";
+import CompanyModel from "../models/companyModel.js";
 
-// Standardized response function
-const handleResponse = (res, status, message, data = null) => {
-  res.status(status).json({
-    status,
-    message,
-    data,
-  });
+export const createCompany = async (req, res, next) => {
+  const { companyName, address, customersId, meterId, billingId, paymentId } =
+    req.body;
+  try {
+    const newCompany = await CompanyModel.createCompany({
+      companyName: companyName,
+      address: address,
+      customersId: customersId,
+      meterId: meterId,
+      billingId: billingId,
+      paymentId: paymentId,
+    });
+    responseHandler(res, 201, "Company created successfully", newCompany);
+  } catch (err) {
+    next(errorHandler(err));
+  }
 };
 
-export const createUser = async (req, res, next) => {
-  const { name, email, password, isAdmin, mobileNo, company_id } = req.body;
+export const getAllCompanies = async (req, res, next) => {
   try {
-    const newUser = await createUserService(
-      name,
-      email,
-      password,
-      isAdmin,
-      mobileNo,
-      company_id
+    const companies = await CompanyModel.getAllCompanies();
+    responseHandler(res, 200, "Companies fetched successfully", companies);
+  } catch (err) {
+    next(errorHandler(err));
+  }
+};
+
+export const getCompanyById = async (req, res, next) => {
+  try {
+    const company = await CompanyModel.getCompanyById(req.params.id);
+    if (!company) return responseHandler(res, 404, "Company not found");
+    responseHandler(res, 200, "Company fetched successfully", company);
+  } catch (err) {
+    next(errorHandler(err));
+  }
+};
+
+export const updateCompany = async (req, res, next) => {
+  const { companyName, address, customerId, meterId, invoiceId, paymentId } =
+    req.body;
+  const companyData = {
+    companyName: companyName,
+    address: address,
+    customerId: customerId,
+    meterId: meterId,
+    invoiceId: invoiceId,
+    paymentId: paymentId,
+  };
+  try {
+    const updatedCompany = await CompanyModel.updateCompany(
+      req.params.id,
+      companyData
     );
-    handleResponse(res, 201, "User created successfully", newUser);
+    if (!updatedCompany) return responseHandler(res, 404, "Company not found");
+    responseHandler(res, 200, "Company updated successfully", updatedCompany);
   } catch (err) {
     next(errorHandler(err));
   }
 };
 
-export const getAllUsers = async (req, res, next) => {
+export const deleteCompany = async (req, res, next) => {
   try {
-    const users = await getAllUsersService();
-    handleResponse(res, 200, "Users fetched successfully", users);
-  } catch (err) {
-    next(errorHandler(err));
-  }
-};
-
-export const getUserById = async (req, res, next) => {
-  try {
-    const user = await getUserByIdService(req.params.id);
-    if (!user) return handleResponse(res, 404, "User not found");
-    handleResponse(res, 200, "User fetched successfully", user);
-  } catch (err) {
-    next(errorHandler(err));
-  }
-};
-
-export const updateUser = async (req, res, next) => {
-  const { name, email } = req.body;
-  try {
-    const updatedUser = await updateUserService(req.params.id, name, email);
-    if (!updatedUser) return handleResponse(res, 404, "User not found");
-    handleResponse(res, 200, "User updated successfully", updatedUser);
-  } catch (err) {
-    next(errorHandler(err));
-  }
-};
-
-export const deleteUser = async (req, res, next) => {
-  try {
-    const updatedUser = await deleteUserService(req.params.id);
-    if (!updatedUser) return handleResponse(res, 404, "User not found");
-    handleResponse(res, 200, "User updated successfully", updatedUser);
+    const deletedCompany = await CompanyModel.deleteCompany(req.params.id);
+    if (!deletedCompany) return responseHandler(res, 404, "Company not found");
+    responseHandler(res, 200, "Company deleted successfully", deletedCompany);
   } catch (err) {
     next(errorHandler(err));
   }

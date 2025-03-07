@@ -13,3 +13,11 @@ export const errorHandler = async (err, req, res, next) => {
     details: err.details || null,
   });
 };
+
+export const responseHandler = (res, status, message, data = null) => {
+  res.status(status).json({
+    status,
+    message,
+    data,
+  });
+};
