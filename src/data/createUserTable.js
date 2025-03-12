@@ -10,10 +10,10 @@ const createUserTable = async () => {
             table.string("firstName", 100).notNullable();
             table.string("lastName", 100).notNullable();
             table.string("email", 100).unique().notNullable();
-            table.string("password", 100).notNullable();
+            table.string("password", 250).notNullable();
             table.boolean("isAdmin").defaultTo(false);
-            table.integer("mobileNo").notNullable();
-            table.integer("companyId").nullable();
+            // Add staff in the future
+            table.string("mobileNo", 11).unique().notNullable();
             table.timestamp("createdAt").defaultTo(knexInstance.fn.now());
           })
           .catch((error) => {

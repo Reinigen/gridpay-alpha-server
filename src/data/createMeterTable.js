@@ -7,7 +7,7 @@ const createMeterTable = async () => {
       if (!exists) {
         return knexInstance.schema
           .createTable("meter", (table) => {
-            table.increments("meterId").primary();
+            table.string("meterId", 255).unique().primary();
             table
               .integer("meterReading")
               .references("meterReadingId")

@@ -8,7 +8,17 @@ const createCompanyTable = async () => {
           .createTable("company", (table) => {
             table.increments("companyId").primary();
             table.string("companyName", 100).unique().notNullable();
+            table
+              .foreign("companyOwner")
+              .references("userId")
+              .inTable("users")
+              .notNullable();
             table.string("address", 100).notNullable();
+            table
+              .foreign("companyAdmin")
+              .references("userId")
+              .inTable("users")
+              .nullable();
             table
               .integer("customerId")
               .references("customerId")

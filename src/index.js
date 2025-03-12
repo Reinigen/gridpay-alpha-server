@@ -6,7 +6,9 @@ import dotenv from "dotenv";
 import pool from "./config/db.js";
 
 import userRoutes from "./routes/userRoutes.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
+import companyRoutes from "./routes/companyRoutes.js";
+import customerRoutes from "./routes/customerRoutes.js";
+import { errorHandler } from "./middlewares/handlers.js";
 import createUserTable from "./data/createUserTable.js";
 
 // Env Setup
@@ -33,6 +35,8 @@ app.use(cors(corsOptions));
 //Routes Middleware
 
 app.use("/users", userRoutes);
+app.use("/companies", companyRoutes);
+app.use("/customers", customerRoutes);
 
 app.use(errorHandler);
 

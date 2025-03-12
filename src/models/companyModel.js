@@ -1,4 +1,4 @@
-import { knexInstance } from "../config/db.js";
+import knexInstance from "../config/db.js";
 class CompanyModel {
   static getAllCompanies = async () => {
     const companies = await knexInstance.select("*").from("company");
@@ -12,22 +12,12 @@ class CompanyModel {
       .first();
     return company;
   };
-  static createCompany = async (
-    companyName,
-    address,
-    customerId,
-    meterId,
-    invoiceId,
-    paymentId
-  ) => {
+  static createCompany = async (companyName, address, companyOwner) => {
     const newCompany = await knexInstance("company")
       .insert({
         companyName: companyName,
         address: address,
-        customerId: customerId,
-        meterId: meterId,
-        invoiceId: invoiceId,
-        paymentId: paymentId,
+        companyOwner: companyOwner,
       })
       .returning("*");
     return newCompany[0];

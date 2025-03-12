@@ -24,22 +24,14 @@ class UserModel {
     return user;
   };
 
-  static createUser = async (
-    firstName,
-    lastName,
-    email,
-    password,
-    mobileNo,
-    companyId
-  ) => {
+  static createUser = async (userData) => {
     const newUser = await knexInstance("users")
       .insert({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-        mobileNo: mobileNo,
-        companyId: companyId,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        password: userData.password,
+        mobileNo: userData.mobileNo,
       })
       .returning("*");
     return newUser[0];
