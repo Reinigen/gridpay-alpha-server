@@ -1,9 +1,11 @@
 import CustomerModel from "../models/customerModel.js";
 
 class CustomerController {
-  static getAllCustomers = async (req, res, next) => {
+  static getAllCompanyCustomers = async (req, res, next) => {
     try {
-      const allCustomers = await CustomerModel.getAllCustomers();
+      const allCustomers = await CustomerModel.getAllCompanyCustomers(
+        req.params.companyId
+      );
       res.status(200).json(allCustomers);
     } catch (err) {
       next(errorHandler(err, req, res, next));

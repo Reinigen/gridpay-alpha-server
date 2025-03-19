@@ -4,7 +4,7 @@ import CustomerController from "../controllers/customerController.js";
 const router = express.Router();
 
 router.post("/addCustomer", CustomerController.addCustomer);
-router.get("/", CustomerController.getAllCustomers);
+router.get("/:companyId", CustomerController.getAllCompanyCustomers);
 router.get("/:id", CustomerController.getCustomerById);
 router.put("/update-customer-details/:id", CustomerController.updateCustomer);
 router.put("/update-to-senior/:id", CustomerController.updateToSenior);

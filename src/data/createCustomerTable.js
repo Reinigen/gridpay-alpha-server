@@ -11,7 +11,12 @@ const createCustomerTable = async () => {
             table.string("customerName", 100).unique().notNullable();
             table.string("address", 100).notNullable();
             table
-              .integer("meterId")
+              .foreign("companyId")
+              .references("companyId")
+              .inTable("company")
+              .notNullable();
+            table
+              .foreign("meterId")
               .references("meterId")
               .inTable("meter")
               .nullable();

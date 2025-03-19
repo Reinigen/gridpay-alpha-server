@@ -8,10 +8,7 @@ const createMeterReadingTable = async () => {
         return knexInstance.schema
           .createTable("meterReading", (table) => {
             table.increments("meterReadingId").primary();
-            table
-              .integer("customerId")
-              .references("customerId")
-              .inTable("customer");
+            table.foreign("meterId").references("meterId").inTable("meter");
             table.date("readingMonth").notNullable();
             table.integer("reading").notNullable();
             table.string("readingImage", 100).nullable();

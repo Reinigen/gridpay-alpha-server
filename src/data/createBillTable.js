@@ -2,19 +2,20 @@ import db from "../config/db.js";
 const { knexInstance } = db;
 const createBillTable = async () => {
   try {
-    knexInstance.schema.hasTable("company").then(function (exists) {
+    knexInstance.schema.hasTable("bill").then(function (exists) {
       if (!exists) {
         return knexInstance.schema
           .createTable("bill", (table) => {
             table.increments("invoiceId").primary();
             table
-              .string("customerId", 255)
+              .foreign("customerId")
               .references("customerId")
               .inTable("customer");
             table
-              .integer("meterReadingId")
+              .foreign("meterReadingId")
               .references("meterReadingId")
               .inTable("meterReading");
+            table.integer("amountDue").notNullable();
             table.date("billingMonth").notNullable();
             table.timestamp("createdAt").defaultTo(knexInstance.fn.now());
           })
