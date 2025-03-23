@@ -9,9 +9,17 @@ router.get(
   PaymentController.getPaymentsByCustomerId
 );
 router.get(
-  "/get-bills/:customerId/:billingMonth",
-  BillingController.getBillsByCustomerIdAndMonth
+  "/get-payments/:customerId/:paymentMonth",
+  PaymentController.getPaymentsByCustomerIdAndMonth
 );
-router.post("/add-bill", BillingController.addBill);
+router.post("/add-payment", PaymentController.addPayment);
+router.put(
+  "/update-payment/:customerId/:paymentMonth",
+  PaymentController.updatePayment
+);
 
+router.delete(
+  "/delete-payment/:customerId/:paymentMonth",
+  PaymentController.deletePayment
+);
 export default router;

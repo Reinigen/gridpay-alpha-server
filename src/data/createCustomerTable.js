@@ -13,25 +13,17 @@ const createCustomerTable = async () => {
             table
               .foreign("companyId")
               .references("companyId")
-              .inTable("company")
-              .notNullable();
-            table
-              .foreign("meterId")
-              .references("meterId")
-              .inTable("meter")
-              .nullable();
+              .inTable("company");
+            table.foreign("meterId").references("meterId").inTable("meter");
+
             table.boolean("isBilling").defaultTo(false);
             table.boolean("isSenior").defaultTo(false);
-            table
-              .integer("invoiceId")
-              .references("invoiceId")
-              .inTable("bill")
-              .nullable();
+            table.integer("invoiceId").references("invoiceId").inTable("bill");
+
             table
               .integer("paymentId")
               .references("paymentId")
-              .inTable("payment")
-              .nullable();
+              .inTable("payment");
           })
           .catch((error) => {
             console.log(`Error creating Customer table: ${error}`);

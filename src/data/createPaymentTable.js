@@ -13,6 +13,7 @@ const createPaymentTable = async () => {
               .references("customerId")
               .inTable("customer");
             table.integer("invoiceId").references("invoiceId").inTable("bill");
+            table.string("paymentMonth").notNullable();
             table
               .enum("paymentMethod", [
                 "cash",
@@ -23,7 +24,7 @@ const createPaymentTable = async () => {
               .notNullable();
             table.string("originalReceipt", 255).nullable();
             table.string("duplicateReceipt", 255).nullable();
-            table.integer("totalPayment").notNullable();
+            table.integer("amountPaid").notNullable();
             table.timestamp("createdAt").defaultTo(knexInstance.fn.now());
           })
           .catch((error) => {
