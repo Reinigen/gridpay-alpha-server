@@ -9,7 +9,7 @@ dotenv.config();
 
 export const createAccessToken = (user) => {
   const data = {
-    id: user.id,
+    id: user.userId,
     email: user.email,
     isAdmin: user.isAdmin,
   };
@@ -26,7 +26,7 @@ export const verifyToken = (req, res, next) => {
   } else {
     token = token.slice(7, token.length);
 
-    jwt.verify(token, process.env.JWT_SECRET_KEY, function (err, decodedToken) {
+    jwt.verify(token, process.env.JWT_SECRET, function (err, decodedToken) {
       if (err) {
         return res.status(403).send({
           auth: "Failed",
@@ -37,7 +37,6 @@ export const verifyToken = (req, res, next) => {
         console.log(decodedToken);
 
         req.user = decodedToken;
-
         next();
       }
     });
