@@ -15,8 +15,16 @@ const createCustomerTable = async () => {
               .references("companyId")
               .inTable("company");
             table.foreign("meterId").references("meterId").inTable("meter");
-
-            table.boolean("isBilling").defaultTo(false);
+            table
+              .enum("status", [
+                "Active",
+                "Disconnected",
+                "Trial",
+                "Applicant",
+                "End of Life",
+                "Cancelled",
+              ])
+              .defaultTo("Applicant");
             table.boolean("isSenior").defaultTo(false);
             table.integer("invoiceId").references("invoiceId").inTable("bill");
 

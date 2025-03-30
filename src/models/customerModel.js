@@ -20,6 +20,14 @@ class CustomerModel {
       .first();
     return customer;
   };
+  static getCustomerByAddress = async (address) => {
+    const customer = await knexInstance
+      .select("*")
+      .from("customer")
+      .where("address", address)
+      .first();
+    return customer;
+  };
   static addCustomer = async (customerId, companyId, customerName, address) => {
     const newCustomer = await knexInstance
       .insert({

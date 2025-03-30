@@ -18,6 +18,12 @@ router.patch(
   verifyToken,
   UserController.updateUserPassword
 );
+router.patch(
+  "/update-user-role/:id",
+  verifyToken,
+  verifyAdmin,
+  UserController.setUserAsAdmin
+);
 router.delete(
   "/delete-user/:id",
   verifyToken,
