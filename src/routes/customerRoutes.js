@@ -9,6 +9,5 @@ router.get("/:id", CustomerController.getCustomerById);
 router.put("/update-customer-details/:id", CustomerController.updateCustomer);
 router.put("/update-to-senior/:id", CustomerController.updateToSenior);
 router.put("/update-to-billing/:id", CustomerController.updateToBilling);
-router.delete("/:id", CustomerController.deleteCustomer);
 
 export default router;

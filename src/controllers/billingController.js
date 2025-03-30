@@ -14,6 +14,8 @@ const amountDue = (usage, customerId) => {
     };
     return errorHandler(err, req, res, next);
   }
+
+  // min Bracket, max Bracket, rate
   if (usage <= 10) {
     amount = 350;
   } else if (usage > 10 && usage <= 20) {

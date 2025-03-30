@@ -17,5 +17,6 @@ router.post(
   "/add-meter-reading-image/:meterId",
   MeterReadingController.addMeterReadingImage
 );
+// router.delete("/delete-meter-reading/:meterId", MeterReadingController.deleteMeterReading);
 
 export default router;

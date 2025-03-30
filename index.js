@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Cors setup for connecting to the frontend
 const corsOptions = {
-  origin: ["http://localhost:8000"],
+  origin: ["http://localhost:3000"],
   credentials: true,
   optionsSuccessStatus: 200,
 };

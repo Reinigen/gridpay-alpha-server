@@ -39,13 +39,6 @@ class CustomerModel {
       .returning("*");
     return updatedCustomer[0];
   };
-
-  static deleteCustomer = async (customerId) => {
-    const deletedCustomer = await knexInstance("customer")
-      .where("customerId", customerId)
-      .delete();
-    return deletedCustomer;
-  };
 }
 
 export default CustomerModel;

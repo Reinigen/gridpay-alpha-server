@@ -76,15 +76,6 @@ class CustomerController {
       next(errorHandler(err, req, res, next));
     }
   };
-
-  static deleteCustomer = async (req, res, next) => {
-    try {
-      const deletedCustomer = await CustomerModel.deleteCustomer(req.params.id);
-      res.status(200).json(deletedCustomer);
-    } catch (err) {
-      next(errorHandler(err, req, res, next));
-    }
-  };
 }
 
 export default CustomerController;
