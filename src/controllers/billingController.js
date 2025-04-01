@@ -43,6 +43,26 @@ class BillingController {
       errorHandler(err, req, res, next);
     }
   };
+  static getBillByCompanyId = async (req, res, next) => {
+    try {
+      const companyBills = await BillingModel.getBillsByCompanyId(
+        req.params.companyId
+      );
+      res.status(200).json(companyBills);
+    } catch (err) {
+      errorHandler(err, req, res, next);
+    }
+  };
+  static getBillsByCompanyIdAndMonth = async (req, res, next) => {
+    const { companyId, billingMonth } = req.params;
+    try {
+      const companyBillForMonth =
+        await BillingModel.getBillsByCompanyIdAndMonth(companyId, billingMonth);
+      res.status(200).json(companyBillForMonth);
+    } catch (err) {
+      errorHandler(err, req, res, next);
+    }
+  };
   static getBillsByCustomerId = async (req, res, next) => {
     try {
       const customerBills = await BillingModel.getBillsByCustomerId(

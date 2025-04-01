@@ -5,22 +5,36 @@ class BillingModel {
     const allBills = await knexInstance.select("*").from("bill");
     return allBills;
   };
+  static getBillsByCompanyId = async (companyId) => {
+    const invoices = await knexInstance
+      .select("*")
+      .from("bill")
+      .where("companyId", companyId);
+    return invoices;
+  };
+  static getBillsByCompanyIdAndMonth = async (companyId, billingMonth) => {
+    const invoices = await knexInstance
+      .select("*")
+      .from("bill")
+      .where("companyId", companyId && "billingMonth", billingMonth);
+    return invoices;
+  };
   static getBillsByCustomerId = async (customerId) => {
-    const meterReadings = await knexInstance
+    const invoices = await knexInstance
       .select("*")
       .from("bill")
       .where("customerId", customerId);
-    return meterReadings;
+    return invoices;
   };
   static getMeterReadingByCustomerIdAndMonth = async (
     customerId,
     billingMonth
   ) => {
-    const meterReading = await knexInstance
+    const invoices = await knexInstance
       .select("*")
       .from("bill")
       .where("customerId", customerId && "billingMonth", billingMonth);
-    return meterReading;
+    return invoices;
   };
 
   static addInvoice = async (

@@ -4,6 +4,11 @@ import BillingController from "../controllers/billingController.js";
 const router = express.Router();
 
 router.get("/", BillingController.getAllBills);
+router.get("/:companyId", BillingController.getBillByCompanyId);
+router.get(
+  "/:companyId/:billingMonth",
+  BillingController.getBillsByCompanyIdAndMonth
+);
 router.get("/get-bills/:customerId", BillingController.getBillsByCustomerId);
 router.get(
   "/get-bills/:customerId/:billingMonth",
