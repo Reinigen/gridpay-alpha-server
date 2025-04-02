@@ -1,5 +1,6 @@
 import { errorHandler } from "../middlewares/handlers.js";
 import MeterReadingModel from "../models/meterReadingModel.js";
+import MeterModel from "../models/meterModel.js";
 
 class MeterReadingController {
   static getAllMeterReadings = async (req, res, next) => {
@@ -16,6 +17,33 @@ class MeterReadingController {
         req.params.meterId
       );
       res.status(200).json(meterReading);
+    } catch (err) {
+      errorHandler(err, req, res, next);
+    }
+  };
+  static getMeterReadingByCompanyId = async (req, res, next) => {
+    const { companyId } = req.params;
+    try {
+      const companyMeters = await MeterModel.getMeterByCompanyId(companyId);
+      const companyMeterReadings = companyMeters.map((meter) =>
+        MeterReadingModel.getMeterReadingsById(meter.meterId)
+      );
+      res.status(200).json(companyMeterReadings);
+    } catch (err) {
+      errorHandler(err, req, res, next);
+    }
+  };
+  static getMeterReadingByCompanyIdAndMonth = async (req, res, next) => {
+    const { companyId, readingMonth } = req.params;
+    try {
+      const companyMeters = await MeterModel.getMeterByCompanyId(companyId);
+      const companyMeterReadings = companyMeters.map((meter) =>
+        MeterReadingModel.getMeterReadingByIdAndMonth(
+          meter.meterId,
+          readingMonth
+        )
+      );
+      res.status(200).json(companyMeterReadings);
     } catch (err) {
       errorHandler(err, req, res, next);
     }

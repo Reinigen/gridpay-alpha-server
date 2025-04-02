@@ -11,6 +11,7 @@ const createCompanyTable = async () => {
             table.foreign("userId").references("userId").inTable("users");
             table.string("address", 100).notNullable();
             table.foreign("companyAdmin").references("userId").inTable("users");
+            table.foreign("employee").references("userId").inTable("users");
             table
               .integer("customerId")
               .references("customerId")
