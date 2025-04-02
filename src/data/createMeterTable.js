@@ -17,6 +17,7 @@ const createMeterTable = async () => {
               .references("meterReadingId")
               .inTable("meterReading");
             table.integer("address").references("address").inTable("customer");
+            table.boolean("Active").defaultTo(true);
           })
           .catch((error) => {
             console.log(`Error creating meter table: ${error}`);

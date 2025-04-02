@@ -27,7 +27,6 @@ const createCustomerTable = async () => {
               .defaultTo("Applicant");
             table.boolean("isSenior").defaultTo(false);
             table.integer("invoiceId").references("invoiceId").inTable("bill");
-
             table
               .integer("paymentId")
               .references("paymentId")
