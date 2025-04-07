@@ -8,12 +8,12 @@ const createCompanyTable = async () => {
           .createTable("company", (table) => {
             table.increments("companyId").primary();
             table.string("companyName", 100).unique().notNullable();
-            table.foreign("userId").references("userId").inTable("users");
             table.string("address", 100).notNullable();
+            table.foreign("companyOwner").references("userId").inTable("users");
             table.foreign("companyAdmin").references("userId").inTable("users");
             table.foreign("employee").references("userId").inTable("users");
             table
-              .integer("customerId")
+              .string("customerId")
               .references("customerId")
               .inTable("customer");
             table.integer("meterId").references("meterId").inTable("meter");
@@ -22,6 +22,7 @@ const createCompanyTable = async () => {
               .integer("paymentId")
               .references("paymentId")
               .inTable("payment");
+            table.string("pricingPlan", 100).notNullable();
             table.timestamp("createdAt").defaultTo(knexInstance.fn.now());
           })
           .catch((error) => {

@@ -12,12 +12,18 @@ class CompanyModel {
       .first();
     return company;
   };
-  static createCompany = async (companyName, address, companyOwner) => {
+  static createCompany = async (
+    companyName,
+    address,
+    companyOwner,
+    pricingPlan
+  ) => {
     const newCompany = await knexInstance("company")
       .insert({
         companyName: companyName,
         address: address,
         companyOwner: companyOwner,
+        pricingPlan: pricingPlan,
       })
       .returning("*");
     return newCompany[0];

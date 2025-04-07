@@ -4,18 +4,21 @@ import UserModel from "../models/userModel.js";
 
 class CompanyController {
   static createCompany = async (req, res, next) => {
-    const { companyName, address, customersId, meterId, billingId, paymentId } =
-      req.body;
+    const { companyName, employee, address, pricingPlan } = req.body;
     const { userId } = req.user;
+    if (!Array.isArray(pricingPlan.rates)) {
+      responseHandler(res, 400, "Rates should be an array");
+    }
+    if (pricingPlan.tiered === true && !pricingPlan.tiers) {
+      responseHandler(res, 400, "Tiers should be an array");
+    }
     try {
       const newCompany = await CompanyModel.createCompany({
         companyName: companyName,
         address: address,
-        customersId: customersId,
         companyOwner: userId,
-        meterId: meterId,
-        billingId: billingId,
-        paymentId: paymentId,
+        pricingPlan: pricingPlan,
+        employee: employee,
       });
       responseHandler(res, 201, "Company created successfully", newCompany);
     } catch (err) {

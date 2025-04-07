@@ -4,6 +4,44 @@ import MeterReadingModel from "../models/meterReadingModel.js";
 import CustomerModel from "../models/customerModel.js";
 import MeterModel from "../models/meterModel.js";
 
+//define customizable calculator
+const calculatePrice = (pricingSettings, usage) => {
+  const { tiered, tiers, rates, tax } = pricingSettings;
+  let price = 0;
+  let rate = 0;
+  console.log(`Usage: ${usage}`);
+  console.log(`Starting Price: ${price}`);
+  console.log(`Starting Rate: ${rate}`);
+  if (!tiered) {
+    price = usage * rates[0];
+    console.log(`Pre taxed price: ${price}`);
+    price += price * tax;
+    console.log(`Ending price not tiered: ${price}`);
+    return price;
+  }
+  if (tiered) {
+    for (let i = 0; i < tiers.length; i++) {
+      if (i === 0 && usage <= tiers[0]) {
+        rate = rates[0];
+        break;
+      }
+      if (usage > tiers[i - 1] && usage <= tiers[i]) {
+        rate = rates[i];
+      }
+    }
+    if (usage <= tiers[0]) {
+      console.log("Pinging");
+      price = rate;
+    }
+    if (usage >= tiers[0]) {
+      price = usage * rate;
+      console.log(`Pre taxed price: ${price}`);
+      price += price * tax;
+    }
+    console.log(`Ending price access tiered: ${price}`);
+    return price;
+  }
+};
 // define calculator amount due function
 const amountDue = (usage, customerId) => {
   let amount = 0;
