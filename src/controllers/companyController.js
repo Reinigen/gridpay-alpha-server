@@ -6,6 +6,16 @@ class CompanyController {
   static createCompany = async (req, res, next) => {
     const { companyName, employee, address, pricingPlan } = req.body;
     const { userId } = req.user;
+    if (!pricingPlan.tiers || !pricingPlan.rates || !pricingPlan.tax) {
+      responseHandler(
+        res,
+        400,
+        "Pricing plan should contain tiered(boolean), tiers(array), rates(array) and tax(percentage)"
+      );
+    }
+    if (typeof pricingPlan.tiered !== "boolean") {
+      responseHandler(res, 400, "Pricing plan should contain tiered(boolean)");
+    }
     if (!Array.isArray(pricingPlan.rates)) {
       responseHandler(res, 400, "Rates should be an array");
     }
