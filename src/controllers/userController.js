@@ -18,8 +18,11 @@ class UserController {
     try {
       console.log(req.user.id);
       const user = await UserModel.getUserById(req.user.id);
-      if (!user) return responseHandler(res, 404, "User not found");
-      return responseHandler(res, 200, "User fetched successfully", user);
+      if (!user) {
+        return responseHandler(res, 404, "User not found");
+      } else {
+        return responseHandler(res, 200, "User fetched successfully", user);
+      }
     } catch (err) {
       next(errorHandler(err, req, res, next));
     }
