@@ -10,11 +10,13 @@ const createBillTable = async () => {
             table
               .foreign("customerId")
               .references("customerId")
-              .inTable("customer");
+              .inTable("customer")
+              .nullable();
             table
               .foreign("meterReadingId")
               .references("meterReadingId")
-              .inTable("meterReading");
+              .inTable("meterReading")
+              .nullable();
             table.integer("amountDue").notNullable();
             table.date("billingMonth").notNullable();
             table.timestamp("createdAt").defaultTo(knexInstance.fn.now());

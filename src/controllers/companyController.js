@@ -5,7 +5,26 @@ import UserModel from "../models/userModel.js";
 class CompanyController {
   static createCompany = async (req, res, next) => {
     const { companyName, employee, address, pricingPlan } = req.body;
-    const { userId } = req.user;
+    const userId = req.user.id;
+    console.log(req.body);
+    if (
+      companyName.length > 100 ||
+      address.length > 100 ||
+      pricingPlan.length > 100
+    ) {
+      return responseHandler(
+        res,
+        400,
+        "Company name should be less than 100 characters"
+      );
+    }
+    if (!userId) {
+      return responseHandler(
+        res,
+        400,
+        "Need a Company Owner to create a company"
+      );
+    }
     if (!pricingPlan.tiers || !pricingPlan.rates || !pricingPlan.tax) {
       responseHandler(
         res,
@@ -23,13 +42,14 @@ class CompanyController {
       responseHandler(res, 400, "Tiers should be an array");
     }
     try {
-      const newCompany = await CompanyModel.createCompany({
+      let companyData = {
         companyName: companyName,
         address: address,
         companyOwner: userId,
         pricingPlan: pricingPlan,
         employee: employee,
-      });
+      };
+      const newCompany = await CompanyModel.createCompany(companyData);
       responseHandler(res, 201, "Company created successfully", newCompany);
     } catch (err) {
       next(errorHandler(err, req, res, next));
@@ -48,6 +68,30 @@ class CompanyController {
   static getCompanyById = async (req, res, next) => {
     try {
       const company = await CompanyModel.getCompanyById(req.params.id);
+      if (!company) return responseHandler(res, 404, "Company not found");
+      responseHandler(res, 200, "Company fetched successfully", company);
+    } catch (err) {
+      next(errorHandler(err, req, res, next));
+    }
+  };
+
+  static getCompanyByOwnerId = async (req, res, next) => {
+    const userId = req.user.id;
+    try {
+      if (typeof userId !== "number")
+        return responseHandler(res, 404, "User not found");
+      const company = await CompanyModel.getCompanyByOwnerId(userId);
+      if (!company) return responseHandler(res, 404, "Company not found");
+      responseHandler(res, 200, "Company fetched successfully", company);
+    } catch (err) {
+      next(errorHandler(err, req, res, next));
+    }
+  };
+
+  static getCompanyByEmployeeId = async (req, res, next) => {
+    const { userId } = req.params.user.id;
+    try {
+      const company = await CompanyModel.getCompanyByEmployeeId(userId);
       if (!company) return responseHandler(res, 404, "Company not found");
       responseHandler(res, 200, "Company fetched successfully", company);
     } catch (err) {

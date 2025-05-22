@@ -13,7 +13,7 @@ const createMeterTable = async () => {
               .references("customerId")
               .inTable("customer");
             table
-              .foreign("meterReading")
+              .string("meterReading")
               .references("meterReadingId")
               .inTable("meterReading");
             table.integer("address").references("address").inTable("customer");

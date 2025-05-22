@@ -7,22 +7,40 @@ const createCompanyTable = async () => {
         return knexInstance.schema
           .createTable("company", (table) => {
             table.increments("companyId").primary();
-            table.string("companyName", 100).unique().notNullable();
-            table.string("address", 100).notNullable();
-            table.foreign("companyOwner").references("userId").inTable("users");
-            table.foreign("companyAdmin").references("userId").inTable("users");
-            table.foreign("employee").references("userId").inTable("users");
+            table.string("companyName", 255).unique().notNullable();
+            table.string("address", 255).notNullable();
+            table.integer("companyOwner").references("userId").inTable("users");
+            table
+              .integer("companyAdmin")
+              .references("userId")
+              .inTable("users")
+              .nullable();
+            table
+              .integer("employee")
+              .references("userId")
+              .inTable("users")
+              .nullable();
             table
               .string("customerId")
               .references("customerId")
-              .inTable("customer");
-            table.integer("meterId").references("meterId").inTable("meter");
-            table.integer("invoiceId").references("invoiceId").inTable("bill");
+              .inTable("customer")
+              .nullable();
+            table
+              .string("meterId")
+              .references("meterId")
+              .inTable("meter")
+              .nullable();
+            table
+              .integer("invoiceId")
+              .references("invoiceId")
+              .inTable("bill")
+              .nullable();
             table
               .integer("paymentId")
               .references("paymentId")
-              .inTable("payment");
-            table.string("pricingPlan", 100).notNullable();
+              .inTable("payment")
+              .nullable();
+            table.jsonb("pricingPlan").notNullable();
             table.timestamp("createdAt").defaultTo(knexInstance.fn.now());
           })
           .catch((error) => {

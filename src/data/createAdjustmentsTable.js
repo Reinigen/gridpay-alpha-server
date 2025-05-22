@@ -7,7 +7,11 @@ const createAdjustmentsTable = async () => {
         return knexInstance.schema
           .createTable("adjustment", (table) => {
             table.increments("adjustmentId").primary();
-            table.foreign("invoiceId").references("invoiceId").inTable("bill");
+            table
+              .foreign("invoiceId")
+              .references("invoiceId")
+              .inTable("bill")
+              .nullable();
             table
               .foreign("meterReadingId")
               .references("meterReadingId")
