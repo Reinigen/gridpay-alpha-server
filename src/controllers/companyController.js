@@ -49,8 +49,24 @@ class CompanyController {
         pricingPlan: pricingPlan,
         employee: employee,
       };
-      const newCompany = await CompanyModel.createCompany(companyData);
-      responseHandler(res, 201, "Company created successfully", newCompany);
+      const companyNameExists = await CompanyModel.getCompanyByName(
+        companyName
+      );
+      const companyAddressExists = await CompanyModel.getCompanyByAddress(
+        address
+      );
+      if (companyNameExists || companyAddressExists)
+        return responseHandler(
+          res,
+          400,
+          `Company ${
+            companyNameExists ? "with this name" : "with this address"
+          } already exists`
+        );
+      else {
+        const newCompany = await CompanyModel.createCompany(companyData);
+        responseHandler(res, 201, "Company created successfully", newCompany);
+      }
     } catch (err) {
       next(errorHandler(err, req, res, next));
     }
@@ -89,8 +105,12 @@ class CompanyController {
   };
 
   static getCompanyByEmployeeId = async (req, res, next) => {
-    const { userId } = req.params.user.id;
+    const userId = req.user.id;
+    console.log(req.user.id);
+    console.log(userId);
     try {
+      if (typeof userId !== "number")
+        return responseHandler(res, 404, "User not found");
       const company = await CompanyModel.getCompanyByEmployeeId(userId);
       if (!company) return responseHandler(res, 404, "Company not found");
       responseHandler(res, 200, "Company fetched successfully", company);

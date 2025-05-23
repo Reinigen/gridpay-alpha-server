@@ -18,7 +18,22 @@ class CompanyModel {
     const company = await knexInstance
       .select("*")
       .from("company")
-      .where("companyOwner", companyOwner)
+      .where("companyOwner", companyOwner);
+    return company;
+  };
+  static getCompanyByName = async (companyName) => {
+    const company = await knexInstance
+      .select("*")
+      .from("company")
+      .where("companyName", companyName)
+      .first();
+    return company;
+  };
+  static getCompanyByAddress = async (address) => {
+    const company = await knexInstance
+      .select("*")
+      .from("company")
+      .where("address", address)
       .first();
     return company;
   };
@@ -26,8 +41,7 @@ class CompanyModel {
     const company = await knexInstance
       .select("*")
       .from("company")
-      .where("employee", employee)
-      .first();
+      .where("employee", employee);
     return company;
   };
   static createCompany = async (companyData) => {
