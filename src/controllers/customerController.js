@@ -1,3 +1,4 @@
+import { responseHandler } from "../middlewares/handlers.js";
 import CustomerModel from "../models/customerModel.js";
 
 class CustomerController {
@@ -22,22 +23,35 @@ class CustomerController {
   };
 
   static addCustomer = async (req, res, next) => {
-    const { customerId, customerName, address } = req.body;
+    const { customerId, companyId, customerName, address } = req.body;
     const uniqueAddress = await CustomerModel.getCustomerByAddress(address);
+    const uniqueId = await CustomerModel.getCustomerById(customerId);
 
     try {
+      if (uniqueId) {
+        return res
+          .status(400)
+          .json({ message: "Customer with this id already exists" });
+      }
       if (uniqueAddress && uniqueAddress.status === "Active") {
         return res
           .status(400)
           .json({ message: "Customer with this address already exists" });
       }
-      if (!uniqueAddress) {
+
+      if (!uniqueAddress && !uniqueId) {
         const newCustomer = await CustomerModel.addCustomer(
           customerId,
+          companyId,
           customerName,
           address
         );
-        res.status(201).json(newCustomer);
+        return responseHandler(
+          res,
+          201,
+          "Customer added successfully",
+          newCustomer
+        );
       }
     } catch (err) {
       next(errorHandler(err, req, res, next));

@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/addCustomer", CustomerController.addCustomer);
 router.get("/:companyId", CustomerController.getAllCompanyCustomers);
-router.get("/:id", CustomerController.getCustomerById);
+router.get("/customer/:id", CustomerController.getCustomerById);
 router.put(
   "/update-customer-details/:id",
   CustomerController.updateCustomerDetails
