@@ -1,4 +1,4 @@
-import { responseHandler } from "../middlewares/handlers.js";
+import { errorHandler, responseHandler } from "../middlewares/handlers.js";
 import CustomerModel from "../models/customerModel.js";
 
 class CustomerController {
@@ -7,6 +7,9 @@ class CustomerController {
       const allCustomers = await CustomerModel.getAllCompanyCustomers(
         req.params.companyId
       );
+      if (!allCustomers || allCustomers.length === 0) {
+        return res.status(404).json({ message: "No customers found" });
+      }
       res.status(200).json(allCustomers);
     } catch (err) {
       next(errorHandler(err, req, res, next));

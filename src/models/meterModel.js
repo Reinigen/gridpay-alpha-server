@@ -14,7 +14,7 @@ class MeterModel {
     return meters;
   };
   static addMeter = async (meterId, customerId, address) => {
-    const newMeter = await knexInstance
+    const newMeter = await knexInstance("meter")
       .insert({
         meterId: meterId,
         customerId: customerId,

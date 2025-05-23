@@ -44,7 +44,7 @@ class BillingModel {
     amountDue,
     billingMonth
   ) => {
-    const newInvoice = await knexInstance
+    const newInvoice = await knexInstance("bill")
       .insert({
         customerId: customerId,
         meterReadingId: meterReadingId,

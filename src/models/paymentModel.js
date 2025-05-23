@@ -21,7 +21,7 @@ class PaymentModel {
     return payments;
   };
   static addPayment = async (customerId, paymentMonth, amountPaid) => {
-    const newPayment = await knexInstance
+    const newPayment = await knexInstance("payment")
       .insert({
         customerId: customerId,
         paymentMonth: paymentMonth,

@@ -17,7 +17,7 @@ class CustomerModel {
     const customer = await knexInstance
       .select("*")
       .from("customer")
-      .where(customerId)
+      .where("customerId", customerId)
       .first();
     return customer;
   };
@@ -30,7 +30,7 @@ class CustomerModel {
     return customer;
   };
   static addCustomer = async (customerId, companyId, customerName, address) => {
-    const newCustomer = await knexInstance
+    const newCustomer = await knexInstance("customer")
       .insert({
         customerId: customerId,
         companyId: companyId,

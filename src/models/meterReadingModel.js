@@ -29,7 +29,7 @@ class MeterReadingModel {
     meterId,
     readingImage = null
   ) => {
-    const newMeterReading = await knexInstance
+    const newMeterReading = await knexInstance("meterReading")
       .insert({
         readingMonth: readingMonth,
         meterReading: meterReading,

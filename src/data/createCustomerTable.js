@@ -11,10 +11,11 @@ const createCustomerTable = async () => {
             table.string("customerName", 100).unique().notNullable();
             table.string("address", 100).notNullable();
             table
-              .foreign("companyId")
+              .integer("companyId")
               .references("companyId")
-              .inTable("company");
-            table.foreign("meterId").references("meterId").inTable("meter");
+              .inTable("company")
+              .notNullable();
+            table.string("meterId").references("meterId").inTable("meter");
             table
               .enum("status", [
                 "Active",

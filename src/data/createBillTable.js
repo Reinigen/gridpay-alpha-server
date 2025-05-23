@@ -8,12 +8,12 @@ const createBillTable = async () => {
           .createTable("bill", (table) => {
             table.increments("invoiceId").primary();
             table
-              .foreign("customerId")
+              .string("customerId")
               .references("customerId")
               .inTable("customer")
               .nullable();
             table
-              .foreign("meterReadingId")
+              .string("meterReadingId")
               .references("meterReadingId")
               .inTable("meterReading")
               .nullable();
