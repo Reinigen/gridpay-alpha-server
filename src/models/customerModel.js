@@ -38,6 +38,7 @@ class CustomerModel {
         address: address,
       })
       .returning("*");
+
     return newCustomer;
   };
 

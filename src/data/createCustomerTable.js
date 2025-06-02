@@ -8,7 +8,7 @@ const createCustomerTable = async () => {
         return knexInstance.schema
           .createTable("customer", (table) => {
             table.string("customerId", 255).unique().primary();
-            table.string("customerName", 100).unique().notNullable();
+            table.string("customerName", 100).notNullable();
             table.string("address", 100).notNullable();
             table
               .integer("companyId")

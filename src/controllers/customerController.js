@@ -3,6 +3,10 @@ import CustomerModel from "../models/customerModel.js";
 
 class CustomerController {
   static getAllCompanyCustomers = async (req, res, next) => {
+    console.log(req.params.companyId);
+    if (!req.params.companyId || req.params.companyId === null) {
+      return res.status(400).json({ message: "Company id is required" });
+    }
     try {
       const allCustomers = await CustomerModel.getAllCompanyCustomers(
         req.params.companyId
@@ -27,6 +31,10 @@ class CustomerController {
 
   static addCustomer = async (req, res, next) => {
     const { customerId, companyId, customerName, address } = req.body;
+    if (!customerId || !companyId || !customerName || !address) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     const uniqueAddress = await CustomerModel.getCustomerByAddress(address);
     const uniqueId = await CustomerModel.getCustomerById(customerId);
 
